@@ -7,6 +7,6 @@ To run this App in your local please follow the steps below:
 ### `npm ci`
 2 - In your terminal go into machine-data folder and run: "npm ci".
 ### `npm start`
-3 - After intalling node_molues in step 2, now run npm start.
+3 - After intalling node_molues in step 2, now run npm start in your terminal.
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
