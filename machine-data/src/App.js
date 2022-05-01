@@ -16,7 +16,8 @@ function App() {
     totalHoursLoaded: 0
   })
 
-  const conversorToHours = 1/3600000;
+  const timestampToHoursConversor = 1/3600000;
+  // Defining 20% and 0.5% as factor to determine values as idle/loaded or unloaded respectively
   const loadedOrIdleFactor = 0.2;
   const unloadedFactor = 0.005;
 
@@ -30,6 +31,7 @@ function App() {
   let totalHoursUnloaded = 0;
   let totalHoursLoaded = 0;
   
+  // Final data to show in graphic
   const dailyPumpInfo = {
     labels: ['Off', 'On - Unloaded', 'On - Idle', 'On - Loaded'],
     datasets: [
@@ -58,21 +60,22 @@ function App() {
     ]
   }
 
+  //Setting max value (maxLoadLimit) as reference to evaluate idle, loaded, and unloaded values  
   JsonData.forEach(element => {
-    if(element.metrics.Psum.avgvalue && element.metrics.Psum.avgvalue > maxLoadLimit ) {
-      maxLoadLimit = element.metrics.Psum.avgvalue;
+    if(element.metrics.Psum.maxvalue && element.metrics.Psum.maxvalue > maxLoadLimit ) {
+      maxLoadLimit = element.metrics.Psum.maxvalue;
       isLoadedOrIdleParameter = maxLoadLimit * loadedOrIdleFactor;
       isUnloadedParameter = maxLoadLimit * unloadedFactor;
     } 
   });
-  console.log(maxLoadLimit);
-  console.log(isLoadedOrIdleParameter);
+  
+  //Processing average values to calculate off, on-unloaded, on-loaded, and on-idle hours
   JsonData.forEach(element => {
     if(element.metrics.Psum.avgvalue && element.tots && element.fromts) {
       const valueToEvaluate = element.metrics.Psum.avgvalue;
       const isUnloaded = valueToEvaluate <= isUnloadedParameter;
       const isLoaded = valueToEvaluate >= isLoadedOrIdleParameter;
-      const workedTime = (element.tots - element.fromts) * conversorToHours;
+      const workedTime = (element.tots - element.fromts) * timestampToHoursConversor;
 
       totalWorkedHours += workedTime;
       totalHoursOff = 24 - totalWorkedHours;
